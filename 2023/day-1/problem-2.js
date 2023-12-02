@@ -17,13 +17,10 @@ function replaceStrWithNum(match) {
     numsAsStrings.indexOf(match) >= 0
       ? numsAsStrings.indexOf(match)
       : numsAsStrings.indexOf(match.split("").reverse().join(""));
-  return matchIndex + 1;
+  return matchIndex + 1 + match;
 }
 
-const inputLines = fs
-  .readFileSync("./example-2.txt", "utf8")
-  .trim()
-  .split("\n");
+const inputLines = fs.readFileSync("./input.txt", "utf8").trim().split("\n");
 
 let linesWithFirstStrConverted = inputLines.map((line) => {
   return line.replace(new RegExp(numsAsStrings.join("|")), replaceStrWithNum);
