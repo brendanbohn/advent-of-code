@@ -1,24 +1,16 @@
 import fs from "fs";
 
-const inputLines = fs
-  .readFileSync("./example-2.txt", "utf8")
-  .trim()
-  .split("\n");
+const inputLines = fs.readFileSync("./input.txt", "utf8").trim().split("\n");
 
 const cards = {};
 
 for (let i = 0; i < inputLines.length; i++) {
-  // add currentCard to cards
-  if (cards[i + 1]) {
-    cards[i + 1] += 1;
-  } else {
-    cards[i + 1] = 1;
-  }
-
   let matchedWinningNumbers = [];
 
   const card = inputLines[i];
-  const cardId = Number(card.split(":")[0].split(" ")[1]);
+  const cardInfo = card.split(":")[0].split(" ");
+  const cardId = parseInt(cardInfo[cardInfo.length - 1]);
+
   const cardNumbers = card
     .split(":")[1]
     .split("|")
@@ -33,12 +25,12 @@ for (let i = 0; i < inputLines.length; i++) {
   }
 
   const matchCount = matchedWinningNumbers.length;
-  const cardCountIncludingPrevMatches = cards[i + 1];
+  cards[cardId] = cards[cardId] + 1 || 1;
 
-  for (let j = 0; j < cardCountIncludingPrevMatches; j++) {
+  for (let j = 0; j < cards[cardId]; j++) {
     for (let k = 1; k <= matchCount; k++) {
       if (cards[cardId + k]) {
-        cards[cardId + k] += 1;
+        cards[cardId + k] = cards[cardId + k] + 1;
       } else {
         cards[cardId + k] = 1;
       }
@@ -49,4 +41,4 @@ for (let i = 0; i < inputLines.length; i++) {
 const countOfEachCard = Object.values(cards).slice(0, inputLines.length);
 const totalCards = countOfEachCard.reduce((acc, cur) => acc + cur, 0);
 
-console.log(totalCards);
+console.log("total cards: ", totalCards);
