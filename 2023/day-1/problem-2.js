@@ -13,37 +13,22 @@ const numsAsStrings = [
 ];
 
 function replaceStrWithNum(match) {
-  let matchIndex =
-    numsAsStrings.indexOf(match) >= 0
-      ? numsAsStrings.indexOf(match)
-      : numsAsStrings.indexOf(match.split("").reverse().join(""));
-  return matchIndex + 1 + match;
+  console.log(match);
+  console.log(numsAsStrings.indexOf(match) + 1 + match);
+  return numsAsStrings.indexOf(match) + 1 + " " + match;
 }
 
 const inputLines = fs.readFileSync("./input.txt", "utf8").trim().split("\n");
 
-let linesWithFirstStrConverted = inputLines.map((line) => {
-  return line.replace(new RegExp(numsAsStrings.join("|")), replaceStrWithNum);
+let convertedLines = ["eightwo"].map((line) => {
+  console.log(line);
+  return line.replaceAll(
+    new RegExp(numsAsStrings.join("|"), "g"),
+    replaceStrWithNum
+  );
 });
 
-let linesWithLastStrConverted = linesWithFirstStrConverted.map((line) => {
-  const reversedLine = line.split("").reverse().join("");
-  const reversedNumsAsStrings = numsAsStrings
-    .join("|")
-    .split("")
-    .reverse()
-    .join("");
-
-  return reversedLine
-    .replace(new RegExp(reversedNumsAsStrings), replaceStrWithNum)
-    .split("")
-    .reverse()
-    .join("");
-});
-
-console.log(linesWithLastStrConverted);
-
-let combinedFirstAndLastNums = linesWithLastStrConverted.map((line) => {
+let combinedFirstAndLastNums = convertedLines.map((line) => {
   const currentNumbers = line.match(/[0-9]/g);
   const firstNumber = currentNumbers[0];
   const secondNumber =
