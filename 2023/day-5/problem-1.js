@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const input = fs.readFileSync("./example-1.txt", "utf8").trim().split("\n");
+const input = fs.readFileSync("./input.txt", "utf8").trim().split("\n");
 
 let seeds;
 let seedsToSoilMap = [];
@@ -88,7 +88,7 @@ function parseInput(input) {
 
 parseInput(input);
 
-console.log("seeds: ", seeds);
+// console.log("seeds: ", seeds);
 // console.log("seedsToSoilMap: ", seedsToSoilMap);
 // console.log("soilToFertilizerMap: ", soilToFertilizerMap);
 // console.log("fertilizerToWaterMap: ", fertilizerToWaterMap);
@@ -98,30 +98,26 @@ console.log("seeds: ", seeds);
 // console.log("humidityToLocationMap", humidityToLocationMap);
 
 function convert(values, map) {
-  let valuesOutput = new Map();
+  let valuesOutput = [...values];
 
   for (let i = 0; i < map.length; i++) {
-    let destination = map[i][0];
-    let source = map[i][1];
+    let destinationStart = map[i][0];
+    let sourceStart = map[i][1];
     let rangeLength = map[i][2];
-    let counter = 0;
+    let count = 0;
 
     while (rangeLength > 0) {
-      valuesOutput.set(source + counter, destination + counter);
-      counter++;
+      let destination = destinationStart + count;
+      let source = sourceStart + count;
+      if (values.includes(source)) {
+        valuesOutput[values.indexOf(source)] = destination;
+      }
+      count++;
       rangeLength--;
     }
   }
 
-  const convertedValues = values.map((value) => {
-    if (valuesOutput.has(value)) {
-      return valuesOutput.get(value);
-    }
-
-    return value;
-  });
-
-  return convertedValues;
+  return valuesOutput;
 }
 
 const soilValues = convert(seeds, seedsToSoilMap);
