@@ -89,7 +89,7 @@ function parseInput(input) {
 parseInput(input);
 
 console.log("seeds: ", seeds);
-console.log("seedsToSoilMap: ", seedsToSoilMap);
+// console.log("seedsToSoilMap: ", seedsToSoilMap);
 // console.log("soilToFertilizerMap: ", soilToFertilizerMap);
 // console.log("fertilizerToWaterMap: ", fertilizerToWaterMap);
 // console.log("waterToLightMap", waterToLightMap);
@@ -97,28 +97,39 @@ console.log("seedsToSoilMap: ", seedsToSoilMap);
 // console.log("temperatureToHumidityMap", temperatureToHumidityMap);
 // console.log("humidityToLocationMap", humidityToLocationMap);
 
-let seedsToSoilOutput = new Map();
+function convert(values, map) {
+  let valuesOutput = new Map();
 
-for (let i = 0; i < seedsToSoilMap.length; i++) {
-  let destination = seedsToSoilMap[i][0];
-  let source = seedsToSoilMap[i][1];
-  let rangeLength = seedsToSoilMap[i][2];
-  console.log(destination, source, rangeLength);
-  let counter = 0;
+  for (let i = 0; i < map.length; i++) {
+    let destination = map[i][0];
+    let source = map[i][1];
+    let rangeLength = map[i][2];
+    let counter = 0;
 
-  while (rangeLength > 0) {
-    seedsToSoilOutput.set(source + counter, destination + counter);
-    counter++;
-    rangeLength--;
+    while (rangeLength > 0) {
+      valuesOutput.set(source + counter, destination + counter);
+      counter++;
+      rangeLength--;
+    }
   }
-}
 
-console.log(
-  seeds.map((seed) => {
-    if (seedsToSoilOutput.has(seed)) {
-      return seedsToSoilOutput.get(seed);
+  const convertedValues = values.map((value) => {
+    if (valuesOutput.has(value)) {
+      return valuesOutput.get(value);
     }
 
-    return seed;
-  })
-);
+    return value;
+  });
+
+  return convertedValues;
+}
+
+const soilValues = convert(seeds, seedsToSoilMap);
+const fertilizerValues = convert(soilValues, soilToFertilizerMap);
+const waterValues = convert(fertilizerValues, fertilizerToWaterMap);
+const lightValues = convert(waterValues, waterToLightMap);
+const temperatureValues = convert(lightValues, lightToTemperatureMap);
+const humidityValues = convert(temperatureValues, temperatureToHumidityMap);
+const locationValues = convert(humidityValues, humidityToLocationMap);
+
+console.log(Math.min(...locationValues));
